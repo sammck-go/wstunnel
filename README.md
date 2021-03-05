@@ -4,7 +4,7 @@
 
 Wstunnel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single executable including both client and server. Written in Go (golang). Wstunnel is mainly useful for passing through firewalls, though it can also be used to provide a secure endpoint into your network. Wstunnel is very similar to [crowbar](https://github.com/q3k/crowbar) though achieves **much** higher [performance](#performance).
 
-![overview](./docs/Untitled%20Diagram.svg)
+![overview](./docs/network_architecture.svg)
 
 ### Features
 
