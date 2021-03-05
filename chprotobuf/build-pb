@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+if ! [ -x "$(command -v protoc)" ]; then
+  sudo apt-get install -y protobuf-compiler
+fi
+
+if ! [ -x "$(command -v protoc-gen-go)" ]; then
+  go get -u github.com/golang/protobuf/protoc-gen-go
+fi
+
+cd "$DIR"
+protoc --go_out=paths=source_relative:. ./chisel.proto || exit $?

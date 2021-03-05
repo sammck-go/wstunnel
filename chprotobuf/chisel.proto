@@ -1,0 +1,29 @@
+syntax = "proto3";
+option go_package = "github.com/jpillora/chisel/chprotobuf";
+
+enum PbEndpointRole { UNKNOWN=0; STUB=1; SKELETON=2; };
+
+message PbEndpointDescriptor {
+  PbEndpointRole                                 Role = 1;
+  string                                         Type = 2;
+  string                                         Path = 3;
+}
+
+message PbChannelDescriptor {
+  bool                         Reverse                = 1;
+  PbEndpointDescriptor         StubDescriptor         = 2;
+  PbEndpointDescriptor         SkeletonDescriptor     = 3;
+}
+
+message PbSessionConfigRequest {
+  string                       ClientVersion          = 1;
+  repeated PbChannelDescriptor ChannelDescriptors     = 2;
+}
+
+message PbDialRequest {
+  bool                         UseDescriptor          = 1;
+  int32                        ChannelDescriptorIndex = 2;
+  PbEndpointDescriptor         SkeletonDescriptor     = 3;
+  string                       StubName               = 4; 
+}
+
