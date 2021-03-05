@@ -7,7 +7,7 @@ import (
 	"github.com/sammck-go/wstunnel/chprotobuf"
 )
 
-// SessionConfigRequest describes a chisel proxy/client session configuration. It is
+// SessionConfigRequest describes a wstunnel proxy/client session configuration. It is
 // sent from the client to the server during initialization
 type SessionConfigRequest struct {
 	Version            string

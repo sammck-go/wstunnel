@@ -1,15 +1,15 @@
-//chisel end-to-end test
+//wstunnel end-to-end test
 //======================
 //
 //                    (direct)
 //         .--------------->----------------.
-//        /    chisel         chisel         \
+//        /    wstunnel         wstunnel         \
 // request--->client:2001--->server:2002---->fileserver:3000
 //        \                                  /
 //         '--> crowbar:4001--->crowbar:4002'
 //              client           server
 //
-// crowbar and chisel binaries should be in your PATH
+// crowbar and wstunnel binaries should be in your PATH
 
 package main
 
@@ -176,7 +176,7 @@ func main() {
 
 	time.Sleep(100 * time.Millisecond)
 
-	hd := exec.Command("chisel", "server",
+	hd := exec.Command("wstunnel", "server",
 		// "-v",
 		"--key", "foobar",
 		"--port", "2002")
@@ -188,7 +188,7 @@ func main() {
 
 	time.Sleep(100 * time.Millisecond)
 
-	hf := exec.Command("chisel", "client",
+	hf := exec.Command("wstunnel", "client",
 		// "-v",
 		"--fingerprint", "ed:f2:cf:3c:56",
 		"127.0.0.1:2002",

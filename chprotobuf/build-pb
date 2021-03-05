@@ -13,4 +13,4 @@ if ! [ -x "$(command -v protoc-gen-go)" ]; then
 fi
 
 cd "$DIR"
-protoc --go_out=paths=source_relative:. ./chisel.proto || exit $?
+protoc --go_out=paths=source_relative:. ./wstunnel.proto || exit $?

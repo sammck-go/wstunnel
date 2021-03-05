@@ -12,7 +12,7 @@ import (
 type ServerSSHSession struct {
 	SSHSession
 
-	// Server is the chisel proxy server on which this session is running
+	// Server is the wstunnel proxy server on which this session is running
 	server *Server
 }
 
@@ -118,7 +118,7 @@ func (s *ServerSSHSession) startWithSSHConn(
 		if v == "" {
 			v = "<unknown>"
 		}
-		s.ILogf("WARNING: Chisel Client version (%s) differs from server version (%s)", v, BuildVersion)
+		s.ILogf("WARNING: Wstunnel Client version (%s) differs from server version (%s)", v, BuildVersion)
 	}
 
 	//confirm reverse tunnels are allowed

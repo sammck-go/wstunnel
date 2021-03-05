@@ -8,13 +8,13 @@ import (
 	"strings"
 )
 
-// handleClientHandler is the main http websocket handler for the chisel server
+// handleClientHandler is the main http websocket handler for the wstunnel server
 func (s *Server) handleClientHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	//websockets upgrade AND has chisel prefix
+	//websockets upgrade AND has wstunnel prefix
 	upgrade := strings.ToLower(r.Header.Get("Upgrade"))
 	if upgrade == "websocket" {
 		protocol := r.Header.Get("Sec-WebSocket-Protocol")
-		if strings.HasPrefix(protocol, "sammck-chisel-") {
+		if strings.HasPrefix(protocol, "sammck-wstunnel-") {
 			if protocol == ProtocolVersion {
 				s.DLogf("Upgrading to websocket, URL tail=\"%s\", protocol=\"%s\"", r.URL.String(), protocol)
 				wsConn, err := upgrader.Upgrade(w, r, nil)

@@ -126,7 +126,7 @@ func (p *TCPProxy) runWithLocalCallerConn(ctx context.Context, callerConn Channe
 		return p.DLogErrorf("Unable to serialize endpoint descriptor '%s': %s", p.chd.Skeleton, err)
 	}
 
-	serviceSSHConn, reqs, err := sshPrimaryConn.OpenChannel("chisel", skeletonEndpointJSON)
+	serviceSSHConn, reqs, err := sshPrimaryConn.OpenChannel("wstunnel", skeletonEndpointJSON)
 	if err != nil {
 		callerConn.Close()
 		return p.DLogErrorf("SSH open channel to remote endpoint %s failed: %s", p.chd.Skeleton, err)

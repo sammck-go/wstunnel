@@ -16,7 +16,7 @@ const (
 	// ChannelEndpointRoleUnknown is an unknown (uninitialized) endpoint role
 	ChannelEndpointRoleUnknown ChannelEndpointRole = "unknown"
 
-	// ChannelEndpointRoleStub is associated with an endpoint whose chisel
+	// ChannelEndpointRoleStub is associated with an endpoint whose wstunnel
 	// instance must listen for and accept new connections from local clients,
 	// forward connection requests to the remote proxy where services
 	// are locally available. An Stub endpoint may accept multiple
@@ -24,7 +24,7 @@ const (
 	// tunnelled connections to the remote Skeleton endpoint proxy.
 	ChannelEndpointRoleStub ChannelEndpointRole = "stub"
 
-	// ChannelEndpointRoleSkeleton is associated with an endpoint whose chisel
+	// ChannelEndpointRoleSkeleton is associated with an endpoint whose wstunnel
 	// instance must accept connection requests from the remote proxy
 	// and actively reach out and connect to locally available services.
 	// A Skeleton endpoint may accept multiple connection requests from the
@@ -101,9 +101,9 @@ const (
 	// ChannelEndpointTypeLoop ChannelEndpointType is a virtual loopack socket, identified by an opaque
 	// endpoint name. It is similar to a Unix domain socket in that it is identified by a unique
 	// string name to which both a Caller and a Called Service ultimately bind. However, The name is only
-	// resovable within a particular Chisel Proxy, and a Stub endpoint of this type can only be reached
-	// by a Skeleton endpoint of this type on the same Chisel Proxy. Traffic on Channels of this type is
-	// directly forwarded between the Stub and the Skeleton on the Chisel Proxy server, eliminating two
+	// resovable within a particular Wstunnel Proxy, and a Stub endpoint of this type can only be reached
+	// by a Skeleton endpoint of this type on the same Wstunnel Proxy. Traffic on Channels of this type is
+	// directly forwarded between the Stub and the Skeleton on the Wstunnel Proxy server, eliminating two
 	// open os socket handles and two extra socket hops that would be required if ordinary sockets were used.
 	ChannelEndpointTypeLoop ChannelEndpointType = "loop"
 )

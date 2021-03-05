@@ -9,10 +9,10 @@ WORKDIR /src
 RUN go build \
     -mod vendor \
     -ldflags "-X github.com/sammck-go/wstunnel/share.BuildVersion=$(git describe --abbrev=0 --tags)" \
-    -o chisel
+    -o wstunnel
 # container stage
 FROM alpine
 RUN apk update && apk add --no-cache ca-certificates
 WORKDIR /app
-COPY --from=build-env /src/chisel /app/chisel
-ENTRYPOINT ["/app/chisel"]
+COPY --from=build-env /src/wstunnel /app/wstunnel
+ENTRYPOINT ["/app/wstunnel"]

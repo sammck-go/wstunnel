@@ -6,7 +6,7 @@ import (
 	"fmt"
 	socks5 "github.com/armon/go-socks5"
 	"github.com/gorilla/websocket"
-	"github.com/jpillora/requestlog"
+	"github.com/sammck-go/requestlog"
 	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"log"
@@ -17,7 +17,7 @@ import (
 	"regexp"
 )
 
-// ProxyServerConfig is the configuration for the chisel service
+// ProxyServerConfig is the configuration for the wstunnel service
 type ProxyServerConfig struct {
 	KeySeed  string
 	AuthFile string
@@ -29,7 +29,7 @@ type ProxyServerConfig struct {
 	Debug    bool
 }
 
-// Server respresent a chisel service
+// Server respresent a wstunnel service
 type Server struct {
 	ShutdownHelper
 	connStats    ConnStats
@@ -51,7 +51,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
-// NewServer creates and returns a new chisel server
+// NewServer creates and returns a new wstunnel server
 func NewServer(config *ProxyServerConfig) (*Server, error) {
 	logLevel := LogLevelInfo
 	if config.Debug {
@@ -140,7 +140,7 @@ func NewServer(config *ProxyServerConfig) (*Server, error) {
 	return s, nil
 }
 
-// Run is responsible for starting the chisel service
+// Run is responsible for starting the wstunnel service
 func (s *Server) Run(ctx context.Context, host, port string) error {
 	err := s.DoOnceActivate(
 		func() error {

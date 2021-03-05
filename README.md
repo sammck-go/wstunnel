@@ -1,10 +1,10 @@
-# chisel
+# wstunnel
 
 [![GoDoc](https://godoc.org/github.com/sammck-go/wstunnel?status.svg)](https://godoc.org/github.com/sammck-go/wstunnel)
 
-Chisel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single executable including both client and server. Written in Go (golang). Chisel is mainly useful for passing through firewalls, though it can also be used to provide a secure endpoint into your network. Chisel is very similar to [crowbar](https://github.com/q3k/crowbar) though achieves **much** higher [performance](#performance).
+Wstunnel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single executable including both client and server. Written in Go (golang). Wstunnel is mainly useful for passing through firewalls, though it can also be used to provide a secure endpoint into your network. Wstunnel is very similar to [crowbar](https://github.com/q3k/crowbar) though achieves **much** higher [performance](#performance).
 
-![overview](https://docs.google.com/drawings/d/1p53VWxzGNfy8rjr-mW8pvisJmhkoLl82vAgctO_6f1w/pub?w=960&h=720)
+![overview](./docs/Untitled%20Diagram.svg)
 
 ### Features
 
@@ -12,7 +12,7 @@ Chisel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single exec
 - [Performant](#performance)\*
 - [Encrypted connections](#security) using the SSH protocol (via `crypto/ssh`)
 - [Authenticated connections](#authentication); authenticated client connections with a users config file, authenticated server connections with fingerprint matching.
-- Client auto-reconnects with [exponential backoff](https://github.com/jpillora/backoff)
+- Client auto-reconnects with [exponential backoff](https://github.com/sammck-go/backoff)
 - Client can create multiple tunnel endpoints over one TCP connection
 - Client can optionally pass through HTTP CONNECT proxies
 - Server optionally doubles as a [reverse proxy](http://golang.org/pkg/net/http/httputil/#NewSingleHostReverseProxy)
@@ -25,7 +25,7 @@ Chisel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single exec
 
 [![Releases](https://img.shields.io/github/release/sammck-go/wstunnel.svg)](https://github.com/sammck-go/wstunnel/releases) [![Releases](https://img.shields.io/github/downloads/sammck-go/wstunnel/total.svg)](https://github.com/sammck-go/wstunnel/releases)
 
-See [the latest release](https://github.com/sammck-go/wstunnel/releases/latest) or download and install it now with `curl https://i.jpillora.com/chisel! | bash`
+See [the latest release](https://github.com/sammck-go/wstunnel/releases/latest) or download and install it now with `curl https://i.sammck-go.com/wstunnel! | bash`
 
 **Docker**
 
@@ -43,44 +43,44 @@ $ go get -v github.com/sammck-go/wstunnel
 
 ### Demo
 
-A [demo app](https://chisel-demo.herokuapp.com) on Heroku is running this `chisel server`:
+A [demo app](https://wstunnel-demo.herokuapp.com) on Heroku is running this `wstunnel server`:
 
 ```sh
-$ chisel server --port $PORT --proxy http://example.com
+$ wstunnel server --port $PORT --proxy http://example.com
 # listens on $PORT, proxy web requests to http://example.com
 ```
 
 This demo app is also running a [simple file server](https://www.npmjs.com/package/serve) on `:3000`, which is normally inaccessible due to Heroku's firewall. However, if we tunnel in with:
 
 ```sh
-$ chisel client https://chisel-demo.herokuapp.com 3000
-# connects to chisel server at https://chisel-demo.herokuapp.com,
+$ wstunnel client https://wstunnel-demo.herokuapp.com 3000
+# connects to wstunnel server at https://wstunnel-demo.herokuapp.com,
 # tunnels your localhost:3000 to the server's localhost:3000
 ```
 
-and then visit [localhost:3000](http://localhost:3000/), we should see a directory listing. Also, if we visit the [demo app](https://chisel-demo.herokuapp.com) in the browser we should hit the server's default proxy and see a copy of [example.com](http://example.com).
+and then visit [localhost:3000](http://localhost:3000/), we should see a directory listing. Also, if we visit the [demo app](https://wstunnel-demo.herokuapp.com) in the browser we should hit the server's default proxy and see a copy of [example.com](http://example.com).
 
 ### Usage
 
 ```
-$ chisel --help
+$ wstunnel --help
 
-   Usage: chisel [command] [--help]
+   Usage: wstunnel [command] [--help]
 
    Version: X.Y.Z
 
    Commands:
-     server - runs chisel in server mode
-     client - runs chisel in client mode
+     server - runs wstunnel in server mode
+     client - runs wstunnel in client mode
 
    Read more:
      https://github.com/sammck-go/wstunnel
 ```
 
 ```
-$ chisel server --help
+$ wstunnel server --help
 
-  Usage: chisel server [options]
+  Usage: wstunnel server [options]
 
   Options:
 
@@ -93,7 +93,7 @@ $ chisel server --help
     --key, An optional string to seed the generation of a ECDSA public
     and private key pair. All communications will be secured using this
     key pair. Share the subsequent fingerprint with clients to enable detection
-    of man-in-the-middle attacks (defaults to the CHISEL_KEY environment
+    of man-in-the-middle attacks (defaults to the WSTUNNEL_KEY environment
     variable, otherwise a new key is generate each run).
 
     --authfile, An optional path to a users.json file. This file should
@@ -113,11 +113,11 @@ $ chisel server --help
     authfile with {"<user:pass>": [""]}.
 
     --proxy, Specifies another HTTP server to proxy requests to when
-    chisel receives a normal HTTP request. Useful for hiding chisel in
+    wstunnel receives a normal HTTP request. Useful for hiding wstunnel in
     plain sight.
 
     --socks5, Allow clients to access the internal SOCKS5 proxy. See
-    chisel client --help for more information.
+    wstunnel client --help for more information.
 
     --reverse, Allow clients to specify reverse port forwarding remotes
     in addition to normal remotes.
@@ -129,7 +129,7 @@ $ chisel server --help
     --help, This help text
 
   Signals:
-    The chisel process is listening for:
+    The wstunnel process is listening for:
       a SIGUSR2 to print process stats, and
       a SIGHUP to short-circuit the client reconnect timer
 
@@ -143,11 +143,11 @@ $ chisel server --help
 ```
 
 ```
-$ chisel client --help
+$ wstunnel client --help
 
-  Usage: chisel client [options] <server> <remote> [remote] [remote] ...
+  Usage: wstunnel client [options] <server> <remote> [remote] [remote] ...
 
-  <server> is the URL to the chisel server.
+  <server> is the URL to the wstunnel server.
 
   <remote>s are remote connections tunneled through the server, each of
   which come in the form:
@@ -177,13 +177,13 @@ $ chisel client --help
       5000:socks
       R:2222:localhost:22
 
-    When the chisel server has --socks5 enabled, remotes can
+    When the wstunnel server has --socks5 enabled, remotes can
     specify "socks" in place of remote-host and remote-port.
     The default local host and port for a "socks" remote is
     127.0.0.1:1080. Connections to this remote will terminate
     at the server's internal SOCKS5 proxy.
 
-    When the chisel server has --reverse enabled, remotes can
+    When the wstunnel server has --reverse enabled, remotes can
     be prefixed with R to denote that they are reversed. That
     is, the server will listen and accept connections, and they
     will be proxied through the client which specified the remote.
@@ -213,7 +213,7 @@ $ chisel client --help
     disconnection. Defaults to 5 minutes.
 
     --proxy, An optional HTTP CONNECT proxy which will be used reach
-    the chisel server. Authentication can be specified inside the URL.
+    the wstunnel server. Authentication can be specified inside the URL.
     For example, http://admin:password@my-server.com:8081
 
     --hostname, Optionally set the 'Host' header (defaults to the host
@@ -226,7 +226,7 @@ $ chisel client --help
     --help, This help text
 
   Signals:
-    The chisel process is listening for:
+    The wstunnel process is listening for:
       a SIGUSR2 to print process stats, and
       a SIGHUP to short-circuit the client reconnect timer
 
@@ -241,7 +241,7 @@ $ chisel client --help
 
 ### Security
 
-Encryption is always enabled. When you start up a chisel server, it will generate an in-memory ECDSA public/private key pair. The public key fingerprint will be displayed as the server starts. Instead of generating a random key, the server may optionally specify a key seed, using the `--key` option, which will be used to seed the key generation. When clients connect, they will also display the server's public key fingerprint. The client can force a particular fingerprint using the `--fingerprint` option. See the `--help` above for more information.
+Encryption is always enabled. When you start up a wstunnel server, it will generate an in-memory ECDSA public/private key pair. The public key fingerprint will be displayed as the server starts. Instead of generating a random key, the server may optionally specify a key seed, using the `--key` option, which will be used to seed the key generation. When clients connect, they will also display the server's public key fingerprint. The client can force a particular fingerprint using the `--fingerprint` option. See the `--help` above for more information.
 
 ### Authentication
 
@@ -251,19 +251,19 @@ Internally, this is done using the _Password_ authentication method provided by 
 
 ### SOCKS5 Guide
 
-1. Start your chisel server
+1. Start your wstunnel server
 
 ```sh
 docker run \
-  --name chisel -p 9312:9312 \
+  --name wstunnel -p 9312:9312 \
   -d --restart always \
-  jpillara/chisel server -p 9312 --socks5 --key supersecret
+  jpillara/wstunnel server -p 9312 --socks5 --key supersecret
 ```
 
-2. Connect your chisel client (using server's fingerprint)
+2. Connect your wstunnel client (using server's fingerprint)
 
 ```sh
-chisel client --fingerprint ab:12:34 server-address:9312 socks
+wstunnel client --fingerprint ab:12:34 server-address:9312 socks
 ```
 
 3. Point your SOCKS5 clients (e.g. OS/Browser) to:
@@ -276,14 +276,14 @@ localhost:1080
 
 ### Performance
 
-With [crowbar](https://github.com/q3k/crowbar), a connection is tunneled by repeatedly querying the server with updates. This results in a large amount of HTTP and TCP connection overhead. Chisel overcomes this using WebSockets combined with [crypto/ssh](https://golang.org/x/crypto/ssh) to create hundreds of logical connections, resulting in **one** TCP connection per client.
+With [crowbar](https://github.com/q3k/crowbar), a connection is tunneled by repeatedly querying the server with updates. This results in a large amount of HTTP and TCP connection overhead. Wstunnel overcomes this using WebSockets combined with [crypto/ssh](https://golang.org/x/crypto/ssh) to create hundreds of logical connections, resulting in **one** TCP connection per client.
 
 In this simple benchmark, we have:
 
 ```
 					(direct)
         .--------------->----------------.
-       /    chisel         chisel         \
+       /    wstunnel         wstunnel         \
 request--->client:2001--->server:2002---->fileserver:3000
        \                                  /
         '--> crowbar:4001--->crowbar:4002'
@@ -306,7 +306,7 @@ _direct_
 :3000 => 100000000 bytes in 76.3939ms
 ```
 
-`chisel`
+`wstunnel`
 
 ```
 :2001 => 1 bytes in 1.351976ms
@@ -373,8 +373,8 @@ See more [test/](test/)
 
 #### MIT License
 
-Copyright © 2021 Jaime Pillora &lt;dev@jpillora.com&gt;\
-Copyright © 2021 Sam McKelvie &lt;dev@mckelvie.org&gt;
+Copyright © 2017 Jaime Pillora &lt;dev@sammck-go.com&gt;\
+Copyright © 2021 Samuel McKelvie &lt;dev@mckelvie.org&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jpillora/sizestr"
+	"github.com/sammck-go/sizestr"
 )
 
 //GoStats prints statistics to

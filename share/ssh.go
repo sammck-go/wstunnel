@@ -12,7 +12,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/jpillora/sizestr"
+	"github.com/sammck-go/sizestr"
 	"golang.org/x/crypto/ssh"
 )
 

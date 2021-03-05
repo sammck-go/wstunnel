@@ -17,41 +17,41 @@ import (
 // of a network client.
 //   (see https://en.wikipedia.org/wiki/Distributed_object_communication).
 //
-// A "Chisel Proxy" is an instance of this chisel application, running as either a
-// "Chisel Proxy Client" or a "Chisel Proxy Server". A "Chisel Proxy Session" consists
-// of a single Chisel Proxy Client and a single Chisel Proxy Server, communicating with
+// A "Wstunnel Proxy" is an instance of this wstunnel application, running as either a
+// "Wstunnel Proxy Client" or a "Wstunnel Proxy Server". A "Wstunnel Proxy Session" consists
+// of a single Wstunnel Proxy Client and a single Wstunnel Proxy Server, communicating with
 // one another over a single TCP connection using a encrypted SSH protocol over WebSockets.
-// A Chisel Proxy Client participates in exactly on Chisel Proxy Session, but a Chisel Proxy
-// Server may have many concurrent Chisel Proxy Sessions with different Chisel Proxy Clients.
-// All traffic through a Chisel Proxy Session, including proxied network service
-// traffic, is encrypted with the SSH protocol. Provided the private key of the Chisel Proxy
-// Server is kept private, and the public key fingerprint of the Chisel Proxy Server is known
-// in advance by all Chisel Proxy Clients, there is no need for additional encryption of
-// proxied traffic (it may still be desirable to encrypt proxied traffic between Chisel Proxies and
+// A Wstunnel Proxy Client participates in exactly on Wstunnel Proxy Session, but a Wstunnel Proxy
+// Server may have many concurrent Wstunnel Proxy Sessions with different Wstunnel Proxy Clients.
+// All traffic through a Wstunnel Proxy Session, including proxied network service
+// traffic, is encrypted with the SSH protocol. Provided the private key of the Wstunnel Proxy
+// Server is kept private, and the public key fingerprint of the Wstunnel Proxy Server is known
+// in advance by all Wstunnel Proxy Clients, there is no need for additional encryption of
+// proxied traffic (it may still be desirable to encrypt proxied traffic between Wstunnel Proxies and
 // the applications that connect to the proxy).
 //
-// A Local Chisel Proxy is the Chisel Proxy that is directly network-reachable in the context
-// of a particular discussion. It may be either a Chisel Proxy Client or a Chisel Proxy Server.
+// A Local Wstunnel Proxy is the Wstunnel Proxy that is directly network-reachable in the context
+// of a particular discussion. It may be either a Wstunnel Proxy Client or a Wstunnel Proxy Server.
 //
-// A Remote Chisel Proxy is the other Chisel Proxy in the same Chisel Proxy Session as a
-// given Local Chisel Proxy.
+// A Remote Wstunnel Proxy is the other Wstunnel Proxy in the same Wstunnel Proxy Session as a
+// given Local Wstunnel Proxy.
 //
 // A "Caller" is an originating application that wishes to connect to a logical
 // network "Called Service" that can not be reached locally, but which must be reached
-// through the Chisel Proxy Session. Typically this is a TCP client, though other protocols
+// through the Wstunnel Proxy Session. Typically this is a TCP client, though other protocols
 // are supported.
 //
 // A "Called Service" is a logical network service that needs to be accessed by
-// "Callers" that cannot reach it locally, but must reach it through a Chisel Proxy Session.
+// "Callers" that cannot reach it locally, but must reach it through a Wstunnel Proxy Session.
 // Typically this is a TCP service listening at a particular host/port, though other
 // protocols are supported.
 //
-// A ChannelEndpoint is a logical network endpoint on a Local Chisel Proxy that
-// is paired with another ChannelEndpoint on the Remote Chisel Proxy.
+// A ChannelEndpoint is a logical network endpoint on a Local Wstunnel Proxy that
+// is paired with another ChannelEndpoint on the Remote Wstunnel Proxy.
 // A ChannelEndpoint is either a "Stub", meaning that it impersonates a remote Called Service
 // and listens for and accepts connection requests from local Callers and forwards them
-// to the peered ChannelEndpoint on the Remote Chisel Proxy, or a Skeleton, meaning that it responds to
-// connection requests from the Remote Chisel Proxy and impersonates the remote Caller
+// to the peered ChannelEndpoint on the Remote Wstunnel Proxy, or a Skeleton, meaning that it responds to
+// connection requests from the Remote Wstunnel Proxy and impersonates the remote Caller
 // by connecting to locally available Called Services.
 //
 // A Stub looks like a Called Service to a Caller, and a Skeleton looks like
@@ -60,9 +60,9 @@ import (
 // We will refer to the combination of a Stub ChannelEndpoint and its peered remote
 // Skeleton ChannelEndpoint as a "Channel Endpoint Pair". Since it is a distributed
 // entity, a Channel Endpoint Pair has no direct representation in code. A Channel Endpoint
-// Pair in which Stub ChannelEndpoint is on the Chisel Proxy Client is referred to
+// Pair in which Stub ChannelEndpoint is on the Wstunnel Proxy Client is referred to
 // as operating in "forward proxy mode". A Channel Endpoint Pair in which Stub
-// ChannelEndpoint is on the Chisel Proxy Server is referred to as operating in
+// ChannelEndpoint is on the Wstunnel Proxy Server is referred to as operating in
 // "reverse proxy mode".
 //
 // Just as a socket service listener can accept and service multiple concurrent
@@ -71,8 +71,8 @@ import (
 // concurrent service connections at the Skeleton side. Each individual proxied
 // connection of this type is called a Channel. Traffic on each Channel is completely
 // independent of and asynchronous to traffic on other Channels. all Channel
-// traffic is multiplexed through a Chisel Proxy Session on the single TCP connection
-// used by the Chisel Proxy Session; flow control is employed to ensure that a delay
+// traffic is multiplexed through a Wstunnel Proxy Session on the single TCP connection
+// used by the Wstunnel Proxy Session; flow control is employed to ensure that a delay
 // in reading from one Channel has no effect on the availability of other channels or on
 // traffic in the opposite direction on the same channel.
 //
@@ -83,16 +83,16 @@ import (
 // One type of ChannelEndpoint that deserves special mention is a "Loop" ChannelEndpoint.
 // A Loop Stub ChannelEndpoint operates very much like a Unix Domain Socket Stub (it
 // listens on a specified name in a string-based namespace), except that it can only
-// accept connections from Loop Skeleton ChannelEndpoints on the Same Chisel Proxy (it has
-// no visibility outside of the Chisel Proxy). The advantage of Loop Channels is that
+// accept connections from Loop Skeleton ChannelEndpoints on the Same Wstunnel Proxy (it has
+// no visibility outside of the Wstunnel Proxy). The advantage of Loop Channels is that
 // traffic is directly forwarded between a Caller's Channel and a Called service's
 // Channel, when both the Caller and the Called Service are reachable only through
-// a Chisel Proxy Session. This effectively saves two network hops for traffic
+// a Wstunnel Proxy Session. This effectively saves two network hops for traffic
 // in both directions (writing to a unix domain socket and reading back from the
 // same unix domain socket)
 //
 //                           +-----------------------------+             +--------------------------------+
-//                           |     Chisel Proxy Client     |    Chisel   |     Chisel Proxy Server        |
+//                           |     Wstunnel Proxy Client     |    Wstunnel   |     Wstunnel Proxy Server        |
 //                           |                             |   Session   |                                |
 //                           |                             | ==========> |                                |
 //   +----------------+      |    +-------------------|    |             |    +--------------------+      |      +----------------+
@@ -116,7 +116,7 @@ import (
 //                           +-----------------------------|             |                              | |
 //                                                                       |                              | |
 //                           +-----------------------------+             |                              | |
-//                           |     Chisel Proxy Client     |    Chisel   |                              | |
+//                           |     Wstunnel Proxy Client     |    Wstunnel   |                              | |
 //                           |                             |   Session   |                              | |
 //                           |                             | ==========> |                              | |
 //   +----------------+      |    +-------------------|    |             |    +--------------------+    | |

@@ -5,15 +5,15 @@ set -e
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 
-if [ "$1" == "--chisel" ]; then
+if [ "$1" == "--wstunnel" ]; then
   shift
-  CHISEL_SERVER="$1"
+  WSTUNNEL_SERVER="$1"
   shift
 fi
 
-if [ -z "$CHISEL_SERVER" ]; then
-  echo "You must provide a chisel proxy server either with --chisel <server> or set CHISEL_SERVER in the environment" >&2
+if [ -z "$WSTUNNEL_SERVER" ]; then
+  echo "You must provide a wstunnel proxy server either with --wstunnel <server> or set WSTUNNEL_SERVER in the environment" >&2
  exit 1
 fi
 
-ssh -o ProxyCommand="$SCRIPT_DIR/chisel client --keepalive 2m '$CHISEL_SERVER' stdio:%h:%p 2>/dev/null" "$@"
+ssh -o ProxyCommand="$SCRIPT_DIR/wstunnel client --keepalive 2m '$WSTUNNEL_SERVER' stdio:%h:%p 2>/dev/null" "$@"
