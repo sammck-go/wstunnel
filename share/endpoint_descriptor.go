@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jpillora/chisel/chprotobuf"
+	"github.com/sammck-go/wstunnel/chprotobuf"
 )
 
 // ChannelEndpointRole defines whether an endpoint is acting as

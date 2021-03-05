@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"syscall"
 
-	chshare "github.com/jpillora/chisel/share"
+	chshare "github.com/sammck-go/wstunnel/share"
 )
 
 var help = `
@@ -24,7 +24,7 @@ var help = `
     client - runs chisel in client mode
 
   Read more:
-    https://github.com/jpillora/chisel
+    https://github.com/sammck-go/wstunnel
 
 `
 
@@ -97,7 +97,7 @@ var commonHelp = `
     ` + chshare.BuildVersion + `
 
   Read more:
-    https://github.com/jpillora/chisel
+    https://github.com/sammck-go/wstunnel
 
 `
 

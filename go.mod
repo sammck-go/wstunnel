@@ -1,8 +1,8 @@
-module github.com/jpillora/chisel
+module github.com/sammck-go/wstunnel
 
 go 1.16
 
-replace github.com/jpillora/chisel => /home/sam/go/src/github.com/jpillora/chisel
+replace github.com/sammck-go/wstunnel => /home/sam/go/src/github.com/sammck-go/wstunnel
 
 require (
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect

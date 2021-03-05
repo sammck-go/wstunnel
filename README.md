@@ -1,6 +1,6 @@
 # chisel
 
-[![GoDoc](https://godoc.org/github.com/jpillora/chisel?status.svg)](https://godoc.org/github.com/jpillora/chisel)
+[![GoDoc](https://godoc.org/github.com/sammck-go/wstunnel?status.svg)](https://godoc.org/github.com/sammck-go/wstunnel)
 
 Chisel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single executable including both client and server. Written in Go (golang). Chisel is mainly useful for passing through firewalls, though it can also be used to provide a secure endpoint into your network. Chisel is very similar to [crowbar](https://github.com/q3k/crowbar) though achieves **much** higher [performance](#performance).
 
@@ -23,22 +23,22 @@ Chisel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single exec
 
 **Binaries**
 
-[![Releases](https://img.shields.io/github/release/jpillora/chisel.svg)](https://github.com/jpillora/chisel/releases) [![Releases](https://img.shields.io/github/downloads/jpillora/chisel/total.svg)](https://github.com/jpillora/chisel/releases)
+[![Releases](https://img.shields.io/github/release/sammck-go/wstunnel.svg)](https://github.com/sammck-go/wstunnel/releases) [![Releases](https://img.shields.io/github/downloads/sammck-go/wstunnel/total.svg)](https://github.com/sammck-go/wstunnel/releases)
 
-See [the latest release](https://github.com/jpillora/chisel/releases/latest) or download and install it now with `curl https://i.jpillora.com/chisel! | bash`
+See [the latest release](https://github.com/sammck-go/wstunnel/releases/latest) or download and install it now with `curl https://i.jpillora.com/chisel! | bash`
 
 **Docker**
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/jpillora/chisel.svg)](https://hub.docker.com/r/jpillora/chisel/) [![Image Size](https://images.microbadger.com/badges/image/jpillora/chisel.svg)](https://microbadger.com/images/jpillora/chisel)
+[![Docker Pulls](https://img.shields.io/docker/pulls/sammck-go/wstunnel.svg)](https://hub.docker.com/r/sammck-go/wstunnel/) [![Image Size](https://images.microbadger.com/badges/image/sammck-go/wstunnel.svg)](https://microbadger.com/images/sammck-go/wstunnel)
 
 ```sh
-docker run --rm -it jpillora/chisel --help
+docker run --rm -it sammck-go/wstunnel --help
 ```
 
 **Source**
 
 ```sh
-$ go get -v github.com/jpillora/chisel
+$ go get -v github.com/sammck-go/wstunnel
 ```
 
 ### Demo
@@ -74,7 +74,7 @@ $ chisel --help
      client - runs chisel in client mode
 
    Read more:
-     https://github.com/jpillora/chisel
+     https://github.com/sammck-go/wstunnel
 ```
 
 ```
@@ -137,7 +137,7 @@ $ chisel server --help
     X.Y.Z
 
   Read more:
-    https://github.com/jpillora/chisel
+    https://github.com/sammck-go/wstunnel
 
 
 ```
@@ -234,7 +234,7 @@ $ chisel client --help
     X.Y.Z
 
   Read more:
-    https://github.com/jpillora/chisel
+    https://github.com/sammck-go/wstunnel
 
 
 ```
@@ -354,9 +354,9 @@ See more [test/](test/)
 
 - http://golang.org/doc/code.html
 - http://golang.org/doc/effective_go.html
-- `github.com/jpillora/chisel/share` contains the shared package
-- `github.com/jpillora/chisel/server` contains the server package
-- `github.com/jpillora/chisel/client` contains the client package
+- `github.com/sammck-go/wstunnel/share` contains the shared package
+- `github.com/sammck-go/wstunnel/server` contains the server package
+- `github.com/sammck-go/wstunnel/client` contains the client package
 
 ### Changelog
 
