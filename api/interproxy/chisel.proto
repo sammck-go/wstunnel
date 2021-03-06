@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "github.com/sammck-go/wstunnel/chprotobuf";
+option go_package = "github.com/sammck-go/wstunnel/api";
 
 enum PbEndpointRole { UNKNOWN=0; STUB=1; SKELETON=2; };
 
