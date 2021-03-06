@@ -6,7 +6,7 @@ import (
 	"fmt"
 	socks5 "github.com/armon/go-socks5"
 	"github.com/gorilla/websocket"
-	"github.com/sammck-go/requestlog"
+	"github.com/jpillora/requestlog"
 	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"log"

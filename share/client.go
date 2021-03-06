@@ -6,7 +6,7 @@ import (
 	"fmt"
 	socks5 "github.com/armon/go-socks5"
 	"github.com/gorilla/websocket"
-	"github.com/sammck-go/backoff"
+	"github.com/jpillora/backoff"
 	"golang.org/x/crypto/ssh"
 	"net"
 	"net/http"
