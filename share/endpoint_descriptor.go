@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/sammck-go/wstunnel/chprotobuf"
+	"github.com/sammck-go/wstunnel/api/interproxy"
 )
 
 // ChannelEndpointRole defines whether an endpoint is acting as
@@ -33,29 +33,29 @@ const (
 	ChannelEndpointRoleSkeleton ChannelEndpointRole = "skeleton"
 )
 
-var pbEndpointRoleToChannelEndpointRole = map[chprotobuf.PbEndpointRole]ChannelEndpointRole{
-	chprotobuf.PbEndpointRole_UNKNOWN:  ChannelEndpointRoleUnknown,
-	chprotobuf.PbEndpointRole_STUB:     ChannelEndpointRoleStub,
-	chprotobuf.PbEndpointRole_SKELETON: ChannelEndpointRoleSkeleton,
+var pbEndpointRoleToChannelEndpointRole = map[api/interproxy.PbEndpointRole]ChannelEndpointRole{
+	api/interproxy.PbEndpointRole_UNKNOWN:  ChannelEndpointRoleUnknown,
+	api/interproxy.PbEndpointRole_STUB:     ChannelEndpointRoleStub,
+	api/interproxy.PbEndpointRole_SKELETON: ChannelEndpointRoleSkeleton,
 }
 
-var channelEndpointRoleToPbEndpointRole = map[ChannelEndpointRole]chprotobuf.PbEndpointRole{
-	ChannelEndpointRoleUnknown:  chprotobuf.PbEndpointRole_UNKNOWN,
-	ChannelEndpointRoleStub:     chprotobuf.PbEndpointRole_STUB,
-	ChannelEndpointRoleSkeleton: chprotobuf.PbEndpointRole_SKELETON,
+var channelEndpointRoleToPbEndpointRole = map[ChannelEndpointRole]api/interproxy.PbEndpointRole{
+	ChannelEndpointRoleUnknown:  api/interproxy.PbEndpointRole_UNKNOWN,
+	ChannelEndpointRoleStub:     api/interproxy.PbEndpointRole_STUB,
+	ChannelEndpointRoleSkeleton: api/interproxy.PbEndpointRole_SKELETON,
 }
 
 // ToPb converts a ChannelEndpointRole to its protobuf value
-func (x ChannelEndpointRole) ToPb() chprotobuf.PbEndpointRole {
+func (x ChannelEndpointRole) ToPb() api/interproxy.PbEndpointRole {
 	result, ok := channelEndpointRoleToPbEndpointRole[x]
 	if !ok {
-		result = chprotobuf.PbEndpointRole_UNKNOWN
+		result = api/interproxy.PbEndpointRole_UNKNOWN
 	}
 	return result
 }
 
 // PbToChannelEndpointRole returns a ChannelEndpointRole from its protobuf value
-func PbToChannelEndpointRole(pbRole chprotobuf.PbEndpointRole) ChannelEndpointRole {
+func PbToChannelEndpointRole(pbRole api/interproxy.PbEndpointRole) ChannelEndpointRole {
 	result, ok := pbEndpointRoleToChannelEndpointRole[pbRole]
 	if !ok {
 		result = ChannelEndpointRoleUnknown
@@ -64,7 +64,7 @@ func PbToChannelEndpointRole(pbRole chprotobuf.PbEndpointRole) ChannelEndpointRo
 }
 
 // FromPb initializes a ChannelEndpointRole from its protobuf value
-func (x *ChannelEndpointRole) FromPb(pbRole chprotobuf.PbEndpointRole) {
+func (x *ChannelEndpointRole) FromPb(pbRole api/interproxy.PbEndpointRole) {
 	*x = PbToChannelEndpointRole(pbRole)
 }
 
@@ -147,8 +147,8 @@ type ChannelEndpointDescriptor struct {
 }
 
 // ToPb converts a ChannelEndpointDescriptor to its protobuf value
-func (d *ChannelEndpointDescriptor) ToPb() *chprotobuf.PbEndpointDescriptor {
-	return &chprotobuf.PbEndpointDescriptor{
+func (d *ChannelEndpointDescriptor) ToPb() *interproxy.PbEndpointDescriptor {
+	return &api/interproxy.PbEndpointDescriptor{
 		Role: d.Role.ToPb(),
 		Type: d.Type.ToPb(),
 		Path: d.Path,
@@ -156,14 +156,14 @@ func (d *ChannelEndpointDescriptor) ToPb() *chprotobuf.PbEndpointDescriptor {
 }
 
 // FromPb initializes a ChannelEndpointDescriptor from its protobuf value
-func (d *ChannelEndpointDescriptor) FromPb(pb *chprotobuf.PbEndpointDescriptor) {
+func (d *ChannelEndpointDescriptor) FromPb(pb *interproxy.PbEndpointDescriptor) {
 	d.Role.FromPb(pb.GetRole())
 	d.Type.FromPb(pb.GetType())
 	d.Path = pb.GetPath()
 }
 
 // PbToChannelEndpointDescriptor returns a ChannelEndpointDescriptor from its protobuf value
-func PbToChannelEndpointDescriptor(pb *chprotobuf.PbEndpointDescriptor) *ChannelEndpointDescriptor {
+func PbToChannelEndpointDescriptor(pb *interproxy.PbEndpointDescriptor) *ChannelEndpointDescriptor {
 	ced := &ChannelEndpointDescriptor{
 		Role: PbToChannelEndpointRole(pb.GetRole()),
 		Type: PbToChannelEndpointType(pb.GetType()),

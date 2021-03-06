@@ -3,7 +3,7 @@ package chshare
 import (
 	"fmt"
 
-	"github.com/sammck-go/wstunnel/chprotobuf"
+	"github.com/sammck-go/wstunnel/api/interproxy"
 )
 
 // ChannelDescriptor describes a pair of endpoints, one on the client proxy and one
@@ -70,8 +70,8 @@ func (d ChannelDescriptor) LongString() string {
 }
 
 // ToPb converts a ChannelEndpointDescriptor to its protobuf value
-func (d *ChannelDescriptor) ToPb() *chprotobuf.PbChannelDescriptor {
-	return &chprotobuf.PbChannelDescriptor{
+func (d *ChannelDescriptor) ToPb() *interproxy.PbChannelDescriptor {
+	return &api / interproxy.PbChannelDescriptor{
 		Reverse:            d.Reverse,
 		StubDescriptor:     d.Stub.ToPb(),
 		SkeletonDescriptor: d.Skeleton.ToPb(),
@@ -79,14 +79,14 @@ func (d *ChannelDescriptor) ToPb() *chprotobuf.PbChannelDescriptor {
 }
 
 // FromPb initializes a ChannelDescriptor from its protobuf value
-func (d *ChannelDescriptor) FromPb(pb *chprotobuf.PbChannelDescriptor) {
+func (d *ChannelDescriptor) FromPb(pb *interproxy.PbChannelDescriptor) {
 	d.Reverse = pb.GetReverse()
 	d.Stub = PbToChannelEndpointDescriptor(pb.GetStubDescriptor())
 	d.Skeleton = PbToChannelEndpointDescriptor(pb.GetSkeletonDescriptor())
 }
 
 // PbToChannelDescriptor returns a ChannelDescriptor from its protobuf value
-func PbToChannelDescriptor(pb *chprotobuf.PbChannelDescriptor) *ChannelDescriptor {
+func PbToChannelDescriptor(pb *interproxy.PbChannelDescriptor) *ChannelDescriptor {
 	cd := &ChannelDescriptor{
 		Reverse:  pb.GetReverse(),
 		Stub:     PbToChannelEndpointDescriptor(pb.GetStubDescriptor()),

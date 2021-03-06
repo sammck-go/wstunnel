@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/sammck-go/wstunnel/chprotobuf"
+	"github.com/sammck-go/wstunnel/api/interproxy"
 )
 
 // SessionConfigRequest describes a wstunnel proxy/client session configuration. It is
@@ -15,20 +15,20 @@ type SessionConfigRequest struct {
 }
 
 // ToPb converts a SessionConfigRequest to its protobuf value
-func (c *SessionConfigRequest) ToPb() *chprotobuf.PbSessionConfigRequest {
+func (c *SessionConfigRequest) ToPb() *interproxy.PbSessionConfigRequest {
 	numChannels := len(c.ChannelDescriptors)
-	pbcds := make([]*chprotobuf.PbChannelDescriptor, numChannels)
+	pbcds := make([]*interproxy.PbChannelDescriptor, numChannels)
 	for i, cd := range c.ChannelDescriptors {
 		pbcds[i] = cd.ToPb()
 	}
-	return &chprotobuf.PbSessionConfigRequest{
+	return &api / interproxy.PbSessionConfigRequest{
 		ClientVersion:      c.Version,
 		ChannelDescriptors: pbcds,
 	}
 }
 
 // FromPb initializes a SessionConfigRequest from its protobuf value
-func (c *SessionConfigRequest) FromPb(pb *chprotobuf.PbSessionConfigRequest) {
+func (c *SessionConfigRequest) FromPb(pb *interproxy.PbSessionConfigRequest) {
 	c.Version = pb.GetClientVersion()
 	numChannels := len(pb.ChannelDescriptors)
 	c.ChannelDescriptors = make([]*ChannelDescriptor, numChannels)
@@ -38,7 +38,7 @@ func (c *SessionConfigRequest) FromPb(pb *chprotobuf.PbSessionConfigRequest) {
 }
 
 // PbToSessionConfigRequest returns a SessionConfigRequest from its protobuf value
-func PbToSessionConfigRequest(pb *chprotobuf.PbSessionConfigRequest) *SessionConfigRequest {
+func PbToSessionConfigRequest(pb *interproxy.PbSessionConfigRequest) *SessionConfigRequest {
 	numChannels := len(pb.ChannelDescriptors)
 	cds := make([]*ChannelDescriptor, numChannels)
 	for i, pbcd := range pb.ChannelDescriptors {
@@ -52,7 +52,7 @@ func PbToSessionConfigRequest(pb *chprotobuf.PbSessionConfigRequest) *SessionCon
 
 // Unmarshal unserializes a SessionConfigRequest from protobuf bytes
 func (c *SessionConfigRequest) Unmarshal(b []byte) error {
-	pbc := &chprotobuf.PbSessionConfigRequest{}
+	pbc := &api / interproxy.PbSessionConfigRequest{}
 	err := proto.Unmarshal(b, pbc)
 	if err != nil {
 		return fmt.Errorf("Invalid protobuf data for SessionConfigRequest")
