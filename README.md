@@ -57,7 +57,7 @@ docker run --rm -it sammck-go/wstunnel --help
 $ go get -v github.com/sammck-go/wstunnel
 ```
 
-<!-->
+<!--
 ### Demo
 
 A [demo app](https://wstunnel-demo.herokuapp.com) on Heroku is running this `wstunnel server`:
