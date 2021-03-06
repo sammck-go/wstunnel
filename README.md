@@ -39,7 +39,7 @@ $ go install github.com/sammck-go/wstunnel
 **Binaries**
 [![Releases](https://img.shields.io/github/release/sammck-go/wstunnel.svg)](https://github.com/sammck-go/wstunnel/releases) [![Releases](https://img.shields.io/github/downloads/sammck-go/wstunnel/total.svg)](https://github.com/sammck-go/wstunnel/releases)
 
-See [the latest release](https://github.com/sammck-go/wstunnel/releases/latest) or download and install it now with `curl https://i.sammck-go.com/wstunnel! | bash`
+See [the latest release](https://github.com/sammck-go/wstunnel/releases/latest) or download and install it now with `curl https://pub.mckelvie.org/wstunnel! | bash`
 
 **Docker**
 
@@ -317,7 +317,7 @@ localhost:1080
 
 ### Changelog
 
-- `1.0` - Initial release. Not yet ready for general use.
+- `1.0` - Initial release. Not yet ready for public use.
 
 ### Todo
 
@@ -327,7 +327,7 @@ localhost:1080
 
 #### MIT License
 
-Copyright © 2017 Jaime Pillora &lt;dev@sammck-go.com&gt;\
+Copyright © 2017 Jaime Pillora &lt;dev@jpillora.com&gt;\
 Copyright © 2021 Sam McKelvie &lt;dev@mckelvie.org&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
