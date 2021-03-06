@@ -85,24 +85,14 @@ and then visit [localhost:3000](http://localhost:3000/), we should see a directo
     with $ md-tmpl -w README.md -->
 
 <!--tmpl,code=plain:echo "$ wstunnel --help" && ( go build ./cmd/wstunnel && ./wstunnel --help ) -->
-```
+``` plain 
 $ wstunnel --help
-
-   Usage: wstunnel [command] [--help]
-
-   Version: X.Y.Z
-
-   Commands:
-     server - runs wstunnel in server mode
-     client - runs wstunnel in client mode
-
-   Read more:
-     https://github.com/sammck-go/wstunnel
+stat /home/sam/go/src/github.com/sammck-go/wstunnel/cmd/wstunnel: directory not found
 ```
 <!--/tmpl-->
 
 <!--tmpl,code=plain:echo "$ wstunnel server --help" && ./wstunnel server --help -->
-```
+``` plain 
 $ wstunnel server --help
 
   Usage: wstunnel server [options]
@@ -141,6 +131,9 @@ $ wstunnel server --help
     wstunnel receives a normal HTTP request. Useful for hiding wstunnel in
     plain sight.
 
+		--noloop, Disable clients from creating or connecting to "loop"
+		endpoints.
+
     --socks5, Allow clients to access the internal SOCKS5 proxy. See
     wstunnel client --help for more information.
 
@@ -159,17 +152,16 @@ $ wstunnel server --help
       a SIGHUP to short-circuit the client reconnect timer
 
   Version:
-    X.Y.Z
+    1.0.0-src
 
   Read more:
     https://github.com/sammck-go/wstunnel
-
 
 ```
 <!--/tmpl-->
 
 <!--tmpl,code=plain:echo "$ wstunnel client --help" && ./wstunnel client --help -->
-```
+``` plain 
 $ wstunnel client --help
 
   Usage: wstunnel client [options] <server> <remote> [remote] [remote] ...
@@ -244,7 +236,7 @@ $ wstunnel client --help
     For example, http://admin:password@my-server.com:8081
 
     --hostname, Optionally set the 'Host' header (defaults to the host
-    defined in the endpoint url).
+    found in the server url).
 
     --pid Generate pid file in current working directory
 
@@ -258,11 +250,10 @@ $ wstunnel client --help
       a SIGHUP to short-circuit the client reconnect timer
 
   Version:
-    X.Y.Z
+    1.0.0-src
 
   Read more:
     https://github.com/sammck-go/wstunnel
-
 
 ```
 <!--/tmpl-->
