@@ -2,7 +2,15 @@
 
 [![GoDoc](https://godoc.org/github.com/sammck-go/wstunnel?status.svg)](https://godoc.org/github.com/sammck-go/wstunnel)
 
-Wstunnel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single executable including both client and server. Written in Go (golang). Wstunnel is mainly useful for passing through firewalls, though it can also be used to provide a secure endpoint into your network. Wstunnel is very similar to [crowbar](https://github.com/q3k/crowbar) though achieves **much** higher [performance](#performance).
+**wstunnel** is a collection of tools for building secure network communication channels between nodes that have no direct or secure network connectivity,
+by relaying traffic through a shared HTTP/Websocket server. It is useful when one or more endpoints is behind a firewall that restricts access to
+outbound HTTP only, or to secure traffic between components that use insecure protocols.
+
+**wstunnel** is both a golang package for building extensible native clients and servers, and a commandline tool that allows out-of-the box provisioning
+of a shared proxy server and local proxy clients (TCP dialers and listeners).
+
+**wstunnel** is derived from [chisel](https://github.com/jpillora.com/) and inherits from its license. However, it is substantially different and as
+such is not a proper fork, and does not track changes in the **chisel** project.
 
 ![overview](./docs/network_architecture.svg)
 
