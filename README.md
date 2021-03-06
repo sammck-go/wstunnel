@@ -3,7 +3,8 @@
 [![GoDoc](https://godoc.org/github.com/sammck-go/wstunnel?status.svg)](https://godoc.org/github.com/sammck-go/wstunnel)
 
 **wstunnel** is a collection of tools for building secure network communication channels between nodes that have no direct or secure network connectivity,
-by relaying traffic through a shared HTTP/Websocket server. It is useful when one or more endpoints is behind a firewall that restricts access to
+by relaying traffic through a shared HTTP/Websocket server. Multiple tunnelled application channels are multiplexed through a single authenticated, encrypted websocket
+session between a node ad the share proxy server. **wstunnel** is useful when one or more endpoints is behind a firewall that restricts access to
 outbound HTTP only, or to secure traffic between components that use insecure protocols.
 
 **wstunnel** is both a golang package for building extensible native clients and servers, and a commandline tool that allows out-of-the box provisioning
@@ -17,20 +18,25 @@ such is not a proper fork, and does not track changes in the **chisel** project.
 ### Features
 
 - Easy to use
-- [Performant](#performance)\*
 - [Encrypted connections](#security) using the SSH protocol (via `crypto/ssh`)
-- [Authenticated connections](#authentication); authenticated client connections with a users config file, authenticated server connections with fingerprint matching.
+- [Authenticated/authorized connections](#authentication); Client connections using SSH protocol. Extensible authorization, including
+  builtins for simple whitelisting.
 - Client auto-reconnects with [exponential backoff](https://github.com/sammck-go/backoff)
-- Client can create multiple tunnel endpoints over one TCP connection
+- Client can multiplex tunnel endpoints over one authenticated Websocket
+- Support for reverse port forwarding (socket listeners)
 - Client can optionally pass through HTTP CONNECT proxies
 - Server optionally doubles as a [reverse proxy](http://golang.org/pkg/net/http/httputil/#NewSingleHostReverseProxy)
 - Server optionally allows [SOCKS5](https://en.wikipedia.org/wiki/SOCKS) connections (See [guide below](#socks5-guide))
-- Reverse port forwarding
 
 ### Install
 
-**Binaries**
+**Go**
+```sh
+$ go install github.com/sammck-go/wstunnel
+```
 
+<!--
+**Binaries**
 [![Releases](https://img.shields.io/github/release/sammck-go/wstunnel.svg)](https://github.com/sammck-go/wstunnel/releases) [![Releases](https://img.shields.io/github/downloads/sammck-go/wstunnel/total.svg)](https://github.com/sammck-go/wstunnel/releases)
 
 See [the latest release](https://github.com/sammck-go/wstunnel/releases/latest) or download and install it now with `curl https://i.sammck-go.com/wstunnel! | bash`
@@ -42,6 +48,8 @@ See [the latest release](https://github.com/sammck-go/wstunnel/releases/latest) 
 ```sh
 docker run --rm -it sammck-go/wstunnel --help
 ```
+-->
+
 
 **Source**
 
@@ -49,6 +57,7 @@ docker run --rm -it sammck-go/wstunnel --help
 $ go get -v github.com/sammck-go/wstunnel
 ```
 
+<!-->
 ### Demo
 
 A [demo app](https://wstunnel-demo.herokuapp.com) on Heroku is running this `wstunnel server`:
@@ -67,9 +76,15 @@ $ wstunnel client https://wstunnel-demo.herokuapp.com 3000
 ```
 
 and then visit [localhost:3000](http://localhost:3000/), we should see a directory listing. Also, if we visit the [demo app](https://wstunnel-demo.herokuapp.com) in the browser we should hit the server's default proxy and see a copy of [example.com](http://example.com).
+-->
 
 ### Usage
 
+<!-- render these help texts by hand,
+  or use https://github.com/jpillora/md-tmpl
+    with $ md-tmpl -w README.md -->
+
+<!--tmpl,code=plain:echo "$ wstunnel --help" && ( go build ./cmd/wstunnel && ./wstunnel --help ) -->
 ```
 $ wstunnel --help
 
@@ -84,7 +99,9 @@ $ wstunnel --help
    Read more:
      https://github.com/sammck-go/wstunnel
 ```
+<!--/tmpl-->
 
+<!--tmpl,code=plain:echo "$ wstunnel server --help" && ./wstunnel server --help -->
 ```
 $ wstunnel server --help
 
@@ -149,7 +166,9 @@ $ wstunnel server --help
 
 
 ```
+<!--/tmpl-->
 
+<!--tmpl,code=plain:echo "$ wstunnel client --help" && ./wstunnel client --help -->
 ```
 $ wstunnel client --help
 
@@ -246,12 +265,17 @@ $ wstunnel client --help
 
 
 ```
+<!--/tmpl-->
 
 ### Security
 
-Encryption is always enabled. When you start up a wstunnel server, it will generate an in-memory ECDSA public/private key pair. The public key fingerprint will be displayed as the server starts. Instead of generating a random key, the server may optionally specify a key seed, using the `--key` option, which will be used to seed the key generation. When clients connect, they will also display the server's public key fingerprint. The client can force a particular fingerprint using the `--fingerprint` option. See the `--help` above for more information.
+Encryption is always enabled. In the default implementation, When you start up a wstunnel server,
+it will generate an in-memory ECDSA public/private key pair. The public key fingerprint will be displayed as the server starts. Instead of generating
+a random key, the server may optionally specify a key seed, using the `--key` option, which will be used to seed the key generation. When clients connect,
+they will also display the server's public key fingerprint. The client can force a particular fingerprint using the `--fingerprint` option.
+See the `--help` above for more information.
 
-### Authentication
+### Authentication/authorization
 
 Using the `--authfile` option, the server may optionally provide a `user.json` configuration file to create a list of accepted users. The client then authenticates using the `--auth` option. See [users.json](example/users.json) for an example authentication configuration file. See the `--help` above for more information.
 
@@ -265,7 +289,7 @@ Internally, this is done using the _Password_ authentication method provided by 
 docker run \
   --name wstunnel -p 9312:9312 \
   -d --restart always \
-  jpillara/wstunnel server -p 9312 --socks5 --key supersecret
+  sammck/wstunnel server -p 9312 --socks5 --key supersecret
 ```
 
 2. Connect your wstunnel client (using server's fingerprint)
@@ -281,72 +305,6 @@ localhost:1080
 ```
 
 4. Now you have an encrypted, authenticated SOCKS5 connection over HTTP
-
-### Performance
-
-With [crowbar](https://github.com/q3k/crowbar), a connection is tunneled by repeatedly querying the server with updates. This results in a large amount of HTTP and TCP connection overhead. Wstunnel overcomes this using WebSockets combined with [crypto/ssh](https://golang.org/x/crypto/ssh) to create hundreds of logical connections, resulting in **one** TCP connection per client.
-
-In this simple benchmark, we have:
-
-```
-					(direct)
-        .--------------->----------------.
-       /    wstunnel         wstunnel         \
-request--->client:2001--->server:2002---->fileserver:3000
-       \                                  /
-        '--> crowbar:4001--->crowbar:4002'
-             client           server
-```
-
-Note, we're using an in-memory "file" server on localhost for these tests
-
-_direct_
-
-```
-:3000 => 1 bytes in 1.291417ms
-:3000 => 10 bytes in 713.525µs
-:3000 => 100 bytes in 562.48µs
-:3000 => 1000 bytes in 595.445µs
-:3000 => 10000 bytes in 1.053298ms
-:3000 => 100000 bytes in 741.351µs
-:3000 => 1000000 bytes in 1.367143ms
-:3000 => 10000000 bytes in 8.601549ms
-:3000 => 100000000 bytes in 76.3939ms
-```
-
-`wstunnel`
-
-```
-:2001 => 1 bytes in 1.351976ms
-:2001 => 10 bytes in 1.106086ms
-:2001 => 100 bytes in 1.005729ms
-:2001 => 1000 bytes in 1.254396ms
-:2001 => 10000 bytes in 1.139777ms
-:2001 => 100000 bytes in 2.35437ms
-:2001 => 1000000 bytes in 11.502673ms
-:2001 => 10000000 bytes in 123.130246ms
-:2001 => 100000000 bytes in 966.48636ms
-```
-
-~100MB in **~1 second**
-
-`crowbar`
-
-```
-:4001 => 1 bytes in 3.335797ms
-:4001 => 10 bytes in 1.453007ms
-:4001 => 100 bytes in 1.811727ms
-:4001 => 1000 bytes in 1.621525ms
-:4001 => 10000 bytes in 5.20729ms
-:4001 => 100000 bytes in 38.461926ms
-:4001 => 1000000 bytes in 358.784864ms
-:4001 => 10000000 bytes in 3.603206487s
-:4001 => 100000000 bytes in 36.332395213s
-```
-
-~100MB in **36 seconds**
-
-See more [test/](test/)
 
 ### Known Issues
 
@@ -368,21 +326,18 @@ See more [test/](test/)
 
 ### Changelog
 
-- `1.0` - Initial release
-- `1.1` - Swapped out simple symmetric encryption for ECDSA SSH
-- `1.2` - Added SOCKS5 (server) and HTTP CONNECT (client) support
-- `1.3` - Added reverse tunnelling support
+- `1.0` - Initial release. Not yet ready for general use.
 
 ### Todo
 
-- Better, faster tests
-- Expose a stats page for proxy throughput
-- Treat client stdin/stdout as a socket
+- Better tests
+- Refactor code into reusable packages
+- Public key authentication
 
 #### MIT License
 
 Copyright © 2017 Jaime Pillora &lt;dev@sammck-go.com&gt;\
-Copyright © 2021 Samuel McKelvie &lt;dev@mckelvie.org&gt;
+Copyright © 2021 Sam McKelvie &lt;dev@mckelvie.org&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
