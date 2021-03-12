@@ -10,7 +10,7 @@ outbound HTTP only, or to secure traffic between components that use insecure pr
 **wstunnel** is both a golang package for building extensible native clients and servers, and a commandline tool that allows out-of-the box provisioning
 of a shared proxy server and local proxy clients (TCP dialers and listeners).
 
-**wstunnel** is derived from [chisel](https://github.com/jpillora.com/) and inherits from its license. However, it is substantially different and as
+**wstunnel** is derived from [chisel](https://github.com/jpillora/chisel) and inherits from its license. However, it is substantially different and as
 such is not a proper fork, and does not track changes in the **chisel** project.
 
 ![overview](./docs/network_architecture.svg)
