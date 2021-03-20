@@ -2,8 +2,6 @@ package wstchannel
 
 import (
 	"io"
-
-	"github.com/sammck-go/asyncobj"
 )
 
 // ChannelConn is a virtual open bidirectional stream "socket", either
@@ -12,15 +10,14 @@ import (
 type ChannelConn interface {
 	io.ReadWriteCloser
 	WriteHalfCloser
-	asyncobj.AsyncShutdowner
+	AsyncShutdowner
 
-	// WaitForClose blocks until the Close() method has been called and completed. The error returned
-	// from the first Close() is returned
-	WaitForClose() error
+	// GetConnID returns a unique identifier of this connection. Identifiers are never reused for the life of the process.
+	GetConnID() uint64
 
 	// GetNumBytesRead returns the number of bytes read so far on a ChannelConn
-	GetNumBytesRead() int64
+	GetNumBytesRead() uint64
 
 	// GetNumBytesWritten returns the number of bytes written so far on a ChannelConn
-	GetNumBytesWritten() int64
+	GetNumBytesWritten() uint64
 }

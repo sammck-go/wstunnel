@@ -4,16 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	socks5 "github.com/armon/go-socks5"
-	"github.com/gorilla/websocket"
-	"github.com/jpillora/backoff"
-	"golang.org/x/crypto/ssh"
 	"net"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
+
+	socks5 "github.com/armon/go-socks5"
+	"github.com/gorilla/websocket"
+	"github.com/jpillora/backoff"
+	"golang.org/x/crypto/ssh"
 )
 
 //Config represents a client configuration
@@ -188,7 +189,7 @@ func (c *Client) Start(ctx context.Context) error {
 	}
 	//prepare non-reverse proxies (other than stdio proxy, which we defer til we have a good connection)
 	for i, chd := range c.config.shared.ChannelDescriptors {
-		if !chd.Reverse && chd.Stub.Type != ChannelEndpointTypeStdio {
+		if !chd.Reverse && chd.Stub.Type != ChannelEndpointProtocolStdio {
 			proxy := NewTCPProxy(c.Logger, c, i, chd)
 			c.AddShutdownChild(proxy)
 			if err := proxy.Start(ctx); err != nil {

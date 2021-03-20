@@ -1,19 +1,18 @@
-// Package wstchannel provides abstract, extensible, interface-based manipulation of proxy
-// endpoints and channels.
+// Package wstchannel provides abstractions and wrappers around various virtual networking
+// providers, turning them into a uniform set of endpoint and channel interfaces.
 //
 // To distinguish between the various entities in a tunneled
 // network environment, we adopt the vocabulary of distributed object
-// communication, in particular "Stub" for the proxy's channel
+// communication, in particular "Stub" for the proxy's impersonation
 // of a network service, and "Skeleton" for the proxy's impersonation
 // of a network client.
 //   (see https://en.wikipedia.org/wiki/Distributed_object_communication).
 //
-// A "Wstunnel Proxy" is an instance of the proxy code in a single process, running as either a
+// A "Wstunnel Proxy" is an instance of this wstunnel application, running as either a
 // "Wstunnel Proxy Client" or a "Wstunnel Proxy Server". A "Wstunnel Proxy Session" consists
 // of a single Wstunnel Proxy Client and a single Wstunnel Proxy Server, communicating with
-// one another over a single protocol connection (typically aTCP connection using a encrypted
-// SSH protocol over WebSockets.)
-// A Wstunnel Proxy Client participates in exactly one Wstunnel Proxy Session, but a Wstunnel Proxy
+// one another over a single TCP connection using a encrypted SSH protocol over WebSockets.
+// A Wstunnel Proxy Client participates in exactly on Wstunnel Proxy Session, but a Wstunnel Proxy
 // Server may have many concurrent Wstunnel Proxy Sessions with different Wstunnel Proxy Clients.
 // All traffic through a Wstunnel Proxy Session, including proxied network service
 // traffic, is encrypted with the SSH protocol. Provided the private key of the Wstunnel Proxy
@@ -52,8 +51,8 @@
 // We will refer to the combination of a Stub ChannelEndpoint and its peered remote
 // Skeleton ChannelEndpoint as a "Channel Endpoint Pair". Since it is a distributed
 // entity, a Channel Endpoint Pair has no direct representation in code. A Channel Endpoint
-// Pair in which the Stub ChannelEndpoint is on the Wstunnel Proxy Client is referred to
-// as operating in "forward proxy mode". A Channel Endpoint Pair in which the Stub
+// Pair in which Stub ChannelEndpoint is on the Wstunnel Proxy Client is referred to
+// as operating in "forward proxy mode". A Channel Endpoint Pair in which Stub
 // ChannelEndpoint is on the Wstunnel Proxy Server is referred to as operating in
 // "reverse proxy mode".
 //
@@ -118,5 +117,14 @@
 //   +----------------+      |    +-------------------+    |             |    +--------------------+      |
 //                           |                             |             |                                |
 //                           +-----------------------------+             +--------------------------------+
-//
 package wstchannel
+
+import (
+	"github.com/sammck-go/asyncobj"
+	"github.com/sammck-go/logger"
+)
+
+type AsyncHelper = asyncobj.Helper
+type HandleOnceActivateShutdowner = asyncobj.HandleOnceActivatorShutdowner
+type AsyncShutdowner = asyncobj.AsyncShutdowner
+type Logger = logger.Logger
